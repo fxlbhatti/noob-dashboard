@@ -11,7 +11,10 @@
     <div id="app">
         <!-- Loading state -->
         <div id="loading" class="hidden fixed inset-0 bg-white bg-opacity-75 z-50 flex items-center justify-center">
-            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            <div class="text-center">
+                <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                <p class="text-gray-600" id="loading-message">Loading...</p>
+            </div>
         </div>
 
         <!-- Notification -->
@@ -40,12 +43,6 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                             </svg>
                             <span>Refresh</span>
-                        </button>
-                        <button id="analyze-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2" disabled>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                            </svg>
-                            <span>Run Analysis</span>
                         </button>
                     </div>
                 </div>
@@ -140,8 +137,9 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Recent Pages</h2>
-                        <div id="recent-pages-loading" class="hidden text-center py-8">
-                            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+                        <div id="recent-pages-loading" class="text-center py-8">
+                            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mx-auto mb-2"></div>
+                            <p class="text-gray-500 text-sm">Loading pages...</p>
                         </div>
                         <div id="recent-pages-empty" class="hidden text-center py-8 text-gray-500">
                             <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -196,36 +194,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="bg-white rounded-xl shadow-sm p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <button id="go-to-pages" class="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors duration-200 text-center">
-                            <svg class="w-8 h-8 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            <div class="font-medium text-gray-900">Manage Pages</div>
-                            <div class="text-sm text-gray-500">Edit SEO for all pages</div>
-                        </button>
-                        
-                        <button id="go-to-settings" class="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors duration-200 text-center">
-                            <svg class="w-8 h-8 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            <div class="font-medium text-gray-900">SEO Settings</div>
-                            <div class="text-sm text-gray-500">Configure meta tags</div>
-                        </button>
-                        
-                        <button id="go-to-tools" class="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors duration-200 text-center">
-                            <svg class="w-8 h-8 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                            </svg>
-                            <div class="font-medium text-gray-900">SEO Tools</div>
-                            <div class="text-sm text-gray-500">Audit & optimization</div>
-                        </button>
-                    </div>
-                </div>
             </div>
 
             <!-- Pages Tab -->
@@ -242,8 +210,13 @@
                     </div>
                 </div>
                 
-                <div id="pages-loading" class="hidden bg-white rounded-xl shadow-sm p-12 text-center">
-                    <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+                <div id="pages-loading" class="bg-white rounded-xl shadow-sm p-12 text-center">
+                    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                    <p class="text-gray-600" id="pages-loading-message">Loading your pages...</p>
+                    <p class="text-sm text-gray-500 mt-2">If this takes too long, check your browser console for errors.</p>
+                    <button id="pages-debug-btn" class="mt-4 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors duration-200 text-sm">
+                        <i class="fas fa-bug mr-2"></i>Debug API Connection
+                    </button>
                 </div>
                 
                 <div id="pages-empty" class="hidden bg-white rounded-xl shadow-sm p-12 text-center">
@@ -252,9 +225,14 @@
                     </svg>
                     <h3 class="text-lg font-medium text-gray-900 mb-2">No Pages Found</h3>
                     <p class="text-gray-500 mb-4">No HTML or PHP files were found in your directory.</p>
-                    <button id="scan-pages-again-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
-                        Scan Again
-                    </button>
+                    <div class="space-y-2">
+                        <button id="scan-pages-again-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                            Scan Again
+                        </button>
+                        <button id="pages-check-api" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200 text-sm">
+                            Check API Connection
+                        </button>
+                    </div>
                 </div>
                 
                 <div id="pages-table-container" class="hidden bg-white rounded-xl shadow-sm overflow-hidden">
@@ -291,7 +269,7 @@
                 <div class="flex justify-between items-center">
                     <div>
                         <h2 class="text-2xl font-bold text-gray-900">SEO Settings</h2>
-                        <p id="current-file-display" class="text-gray-500 mt-1">No file selected</p>
+                        <p id="current-file-display" class="text-gray-500 mt-1">Select a page below</p>
                     </div>
                     <button id="save-settings-btn" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -301,15 +279,14 @@
                     </button>
                 </div>
                 
-                <div id="no-file-selected" class="bg-white rounded-xl shadow-sm p-12 text-center">
-                    <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                    </svg>
-                    <h3 class="text-lg font-medium text-gray-900 mb-2">No Page Selected</h3>
-                    <p class="text-gray-500 mb-4">Please select a page from the Pages tab to edit its SEO settings.</p>
-                    <button id="settings-go-to-pages" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
-                        Go to Pages
-                    </button>
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Select Page</label>
+                        <select id="page-selector" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Loading pages...</option>
+                        </select>
+                        <p class="text-sm text-gray-500 mt-1">Choose a page to edit its SEO settings</p>
+                    </div>
                 </div>
                 
                 <div id="settings-form" class="hidden">
@@ -447,7 +424,8 @@
                     <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Analysis Results</h3>
                         <div id="analysis-loading" class="hidden text-center py-8">
-                            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+                            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mx-auto mb-2"></div>
+                            <p class="text-gray-500 text-sm">Analyzing your page...</p>
                         </div>
                         <div id="analysis-empty" class="hidden text-center py-8 text-gray-500">
                             <p>No issues found. Run analysis to get results.</p>
@@ -657,6 +635,7 @@
         // DOM Elements
         const elements = {
             loading: document.getElementById('loading'),
+            loadingMessage: document.getElementById('loading-message'),
             notification: document.getElementById('notification'),
             notificationMessage: document.getElementById('notification-message'),
             navTabs: document.getElementById('nav-tabs'),
@@ -666,9 +645,7 @@
             analysisTab: document.getElementById('analysis-tab'),
             toolsTab: document.getElementById('tools-tab'),
             refreshBtn: document.getElementById('refresh-btn'),
-            analyzeBtn: document.getElementById('analyze-btn'),
             saveSettingsBtn: document.getElementById('save-settings-btn'),
-            runAnalysisBtn: document.getElementById('run-analysis-btn'),
             currentFileDisplay: document.getElementById('current-file-display'),
             analysisFileDisplay: document.getElementById('analysis-file-display'),
             // Stats elements
@@ -683,12 +660,15 @@
             recentPagesBody: document.getElementById('recent-pages-body'),
             // Pages tab elements
             pagesLoading: document.getElementById('pages-loading'),
+            pagesLoadingMessage: document.getElementById('pages-loading-message'),
             pagesEmpty: document.getElementById('pages-empty'),
             pagesTableContainer: document.getElementById('pages-table-container'),
             pagesTableBody: document.getElementById('pages-table-body'),
             pagesSearch: document.getElementById('pages-search'),
+            pagesDebugBtn: document.getElementById('pages-debug-btn'),
+            pagesCheckApi: document.getElementById('pages-check-api'),
             // Settings elements
-            noFileSelected: document.getElementById('no-file-selected'),
+            pageSelector: document.getElementById('page-selector'),
             settingsForm: document.getElementById('settings-form'),
             // Analysis elements
             analysisNoFile: document.getElementById('analysis-no-file'),
@@ -708,15 +688,12 @@
             scoreValue: document.getElementById('score-value'),
             // Buttons
             viewFullAnalysis: document.getElementById('view-full-analysis'),
-            goToPages: document.getElementById('go-to-pages'),
-            goToSettings: document.getElementById('go-to-settings'),
-            goToTools: document.getElementById('go-to-tools'),
-            settingsGoToPages: document.getElementById('settings-go-to-pages'),
-            analysisGoToPages: document.getElementById('analysis-go-to-pages'),
             scanAgainBtn: document.getElementById('scan-again-btn'),
             scanPagesAgainBtn: document.getElementById('scan-pages-again-btn'),
             refreshPagesBtn: document.getElementById('refresh-pages-btn'),
             applyRecommendations: document.getElementById('apply-recommendations'),
+            analysisGoToPages: document.getElementById('analysis-go-to-pages'),
+            runAnalysisBtn: document.getElementById('run-analysis-btn'),
             // Tool buttons
             runSiteAudit: document.getElementById('run-site-audit'),
             fixAllIssues: document.getElementById('fix-all-issues'),
@@ -730,8 +707,9 @@
         };
 
         // Utility functions
-        function showLoading() {
+        function showLoading(message = 'Loading...') {
             state.loading = true;
+            elements.loadingMessage.textContent = message;
             elements.loading.classList.remove('hidden');
         }
 
@@ -783,120 +761,312 @@
             circle.setAttribute('stroke-dashoffset', offset);
         }
 
-        // API functions
+        // API functions with enhanced error handling
         const API_URL = './seo-api.php';
 
-        async function fetchPages() {
-            showLoading();
+        // Test API connection
+        async function testApiConnection() {
             try {
-                const response = await fetch(`${API_URL}?action=list`);
-                const data = await response.json();
-                if (data.pages) {
-                    state.pages = data.pages;
-                    renderPagesTable();
-                    renderRecentPages();
-                    
-                    if (data.pages.length > 0 && !state.currentFile) {
-                        loadPageSEO(data.pages[0].filePath);
+                const response = await fetch(`${API_URL}?action=test`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
                     }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
+                
+                return true;
             } catch (error) {
-                showNotification('Failed to load pages', 'error');
-                console.error('Error fetching pages:', error);
+                return false;
             }
-            hideLoading();
         }
 
-        async function fetchStats() {
+        // Fetch pages with better error handling
+        async function fetchPages() {
+            showLoading('Loading pages...');
+            
             try {
-                const response = await fetch(`${API_URL}?action=scan`);
-                const data = await response.json();
-                state.stats = data;
+                // Test API connection first
+                const apiWorking = await testApiConnection();
+                if (!apiWorking) {
+                    throw new Error('API connection failed. Check if seo-api.php exists.');
+                }
+                
+                const response = await fetch(`${API_URL}?action=list`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                // Get response as text first to debug
+                const text = await response.text();
+                
+                // Try to parse as JSON
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (jsonError) {
+                    console.error('JSON Parse Error:', jsonError);
+                    console.error('Raw response:', text);
+                    throw new Error('Invalid JSON response from server. Check browser console for details.');
+                }
+                
+                // Validate data structure
+                if (!data || typeof data !== 'object') {
+                    throw new Error('Invalid data structure from server');
+                }
+                
+                // Ensure pages array exists
+                if (!Array.isArray(data.pages)) {
+                    data.pages = [];
+                }
+                
+                state.pages = data.pages;
+                state.stats = {
+                    totalFiles: data.totalFiles || data.pages.length || 0,
+                    htmlFiles: data.htmlFiles || 0,
+                    phpFiles: data.phpFiles || 0,
+                    directories: data.directories || 0
+                };
+                
+                // Update UI
                 updateStatsDisplay();
-            } catch (error) {
-                console.error('Error fetching stats:', error);
-            }
-        }
-
-        async function loadPageSEO(filePath) {
-            showLoading();
-            try {
-                const response = await fetch(`${API_URL}?action=get&path=${encodeURIComponent(filePath)}`);
-                const data = await response.json();
-                if (data.seoData) {
-                    state.seoData = data.seoData;
-                    state.currentFile = filePath;
-                    updateSettingsForm();
-                    updateFileDisplays();
-                    
-                    // Enable buttons
-                    elements.saveSettingsBtn.disabled = false;
-                    elements.analyzeBtn.disabled = false;
-                    elements.runAnalysisBtn.disabled = false;
-                    elements.applyRecommendations.disabled = false;
-                    
-                    // Run analysis
-                    runAnalysis(filePath);
-                } else if (data.error) {
-                    showNotification(data.error, 'error');
+                renderPagesTable();
+                renderRecentPages();
+                updatePageSelector();
+                
+                // Hide loading states
+                elements.recentPagesLoading.classList.add('hidden');
+                elements.pagesLoading.classList.add('hidden');
+                
+                // Show appropriate UI based on page count
+                if (state.pages.length === 0) {
+                    elements.recentPagesEmpty.classList.remove('hidden');
+                    elements.pagesEmpty.classList.remove('hidden');
+                    showNotification('No HTML/PHP files found. Make sure you have files in your directory.', 'warning');
+                } else {
+                    elements.recentPagesTable.classList.remove('hidden');
+                    elements.pagesTableContainer.classList.remove('hidden');
                 }
+                
+                hideLoading();
+                return true;
             } catch (error) {
-                showNotification('Failed to load page SEO data', 'error');
-                console.error('Error loading page SEO:', error);
+                console.error('Error fetching pages:', error);
+                hideLoading();
+                showNotification(`Failed to load pages: ${error.message}`, 'error');
+                
+                // Show error states
+                elements.recentPagesLoading.classList.add('hidden');
+                elements.pagesLoading.classList.add('hidden');
+                elements.recentPagesEmpty.classList.remove('hidden');
+                elements.pagesEmpty.classList.remove('hidden');
+                
+                // Clear page selector
+                elements.pageSelector.innerHTML = '<option value="">Failed to load pages</option>';
+                
+                return false;
             }
-            hideLoading();
         }
 
+        // Update page selector dropdown
+        function updatePageSelector() {
+            const selector = elements.pageSelector;
+            selector.innerHTML = '';
+            
+            if (state.pages.length === 0) {
+                selector.innerHTML = '<option value="">No pages found</option>';
+                return;
+            }
+            
+            // Add default option
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = 'Select a page...';
+            selector.appendChild(defaultOption);
+            
+            // Add pages
+            state.pages.forEach(page => {
+                const option = document.createElement('option');
+                option.value = page.filePath || page.url;
+                option.textContent = `${page.title || 'Untitled'} (${page.url || 'Unknown URL'})`;
+                option.dataset.filePath = page.filePath || '';
+                selector.appendChild(option);
+            });
+        }
+
+        // Load page SEO data
+        async function loadPageSEO(filePath) {
+            if (!filePath) {
+                // Reset UI when no file selected
+                state.currentFile = '';
+                state.seoData = {
+                    title: '',
+                    description: '',
+                    keywords: '',
+                    canonicalUrl: '',
+                    robots: 'index, follow',
+                    ogTitle: '',
+                    ogDescription: '',
+                    ogImage: '',
+                    twitterCard: 'summary',
+                    twitterTitle: '',
+                    twitterDescription: '',
+                    twitterImage: '',
+                    schemaType: 'Website',
+                    schemaData: '{}'
+                };
+                updateSettingsForm();
+                updateFileDisplays();
+                elements.settingsForm.classList.add('hidden');
+                elements.saveSettingsBtn.disabled = true;
+                elements.runAnalysisBtn.disabled = true;
+                return;
+            }
+            
+            showLoading(`Loading SEO data for ${filePath}...`);
+            
+            try {
+                const response = await fetch(`${API_URL}?action=get&path=${encodeURIComponent(filePath)}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const text = await response.text();
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (jsonError) {
+                    console.error('JSON Parse Error:', jsonError);
+                    console.error('Raw response:', text);
+                    throw new Error('Invalid JSON response from server');
+                }
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                if (!data.seoData) {
+                    throw new Error('No SEO data returned');
+                }
+                
+                state.seoData = data.seoData;
+                state.currentFile = filePath;
+                updateSettingsForm();
+                updateFileDisplays();
+                
+                // Enable buttons
+                elements.saveSettingsBtn.disabled = false;
+                elements.runAnalysisBtn.disabled = false;
+                
+                // Show settings form
+                elements.settingsForm.classList.remove('hidden');
+                
+                hideLoading();
+                return true;
+            } catch (error) {
+                console.error('Error loading page SEO:', error);
+                hideLoading();
+                showNotification(`Failed to load page SEO: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Run SEO analysis
         async function runAnalysis(filePath = state.currentFile) {
-            if (!filePath) return;
+            if (!filePath) {
+                showNotification('No file selected for analysis', 'warning');
+                return false;
+            }
             
             elements.analysisLoading.classList.remove('hidden');
-            elements.analysisResults.innerHTML = '';
             
             try {
-                const response = await fetch(`${API_URL}?action=analyze&path=${encodeURIComponent(filePath)}`);
-                const data = await response.json();
-                if (data.score !== undefined) {
-                    state.analysis = {
-                        score: data.score,
-                        issues: data.issues || []
-                    };
-                    renderAnalysisResults();
-                } else if (data.error) {
-                    showNotification(data.error, 'error');
+                const response = await fetch(`${API_URL}?action=analyze&path=${encodeURIComponent(filePath)}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
+                
+                const text = await response.text();
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (jsonError) {
+                    console.error('JSON Parse Error:', jsonError);
+                    console.error('Raw response:', text);
+                    throw new Error('Invalid JSON response from server');
+                }
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                if (data.score === undefined) {
+                    throw new Error('No score returned from analysis');
+                }
+                
+                state.analysis = {
+                    score: data.score,
+                    issues: Array.isArray(data.issues) ? data.issues : []
+                };
+                
+                renderAnalysisResults();
+                return true;
             } catch (error) {
-                showNotification('Failed to run analysis', 'error');
                 console.error('Error running analysis:', error);
+                showNotification(`Failed to run analysis: ${error.message}`, 'error');
+                return false;
+            } finally {
+                elements.analysisLoading.classList.add('hidden');
             }
-            
-            elements.analysisLoading.classList.add('hidden');
         }
 
+        // Save SEO settings
         async function saveSeoSettings() {
             if (!state.currentFile) {
                 showNotification('No file selected', 'error');
-                return;
+                return false;
             }
 
-            showLoading();
+            showLoading('Saving SEO settings...');
+            
             try {
                 // Get current form values
                 const formData = {
-                    title: document.getElementById('title').value,
-                    description: document.getElementById('description').value,
-                    keywords: document.getElementById('keywords').value,
-                    canonicalUrl: document.getElementById('canonicalUrl').value,
-                    robots: document.getElementById('robots').value,
-                    ogTitle: document.getElementById('ogTitle').value,
-                    ogDescription: document.getElementById('ogDescription').value,
-                    ogImage: document.getElementById('ogImage').value,
-                    twitterCard: document.getElementById('twitterCard').value,
-                    twitterTitle: document.getElementById('twitterTitle').value,
-                    twitterDescription: document.getElementById('twitterDescription').value,
-                    twitterImage: document.getElementById('twitterImage').value,
-                    schemaType: document.getElementById('schemaType').value,
-                    schemaData: document.getElementById('schemaData').value,
+                    title: document.getElementById('title')?.value || '',
+                    description: document.getElementById('description')?.value || '',
+                    keywords: document.getElementById('keywords')?.value || '',
+                    canonicalUrl: document.getElementById('canonicalUrl')?.value || '',
+                    robots: document.getElementById('robots')?.value || 'index, follow',
+                    ogTitle: document.getElementById('ogTitle')?.value || '',
+                    ogDescription: document.getElementById('ogDescription')?.value || '',
+                    ogImage: document.getElementById('ogImage')?.value || '',
+                    twitterCard: document.getElementById('twitterCard')?.value || 'summary',
+                    twitterTitle: document.getElementById('twitterTitle')?.value || '',
+                    twitterDescription: document.getElementById('twitterDescription')?.value || '',
+                    twitterImage: document.getElementById('twitterImage')?.value || '',
+                    schemaType: document.getElementById('schemaType')?.value || 'Website',
+                    schemaData: document.getElementById('schemaData')?.value || '{}',
                     filePath: state.currentFile
                 };
 
@@ -904,41 +1074,56 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify(formData)
                 });
                 
-                const data = await response.json();
-                if (data.success) {
-                    showNotification(data.message);
-                    // Refresh pages list
-                    fetchPages();
-                } else {
-                    showNotification(data.error || 'Failed to save settings', 'error');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
+                
+                const text = await response.text();
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (jsonError) {
+                    console.error('JSON Parse Error:', jsonError);
+                    console.error('Raw response:', text);
+                    throw new Error('Invalid JSON response from server');
+                }
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                if (!data.success) {
+                    throw new Error('Save operation failed');
+                }
+                
+                showNotification(data.message || 'SEO settings saved successfully');
+                // Refresh pages list
+                await fetchPages();
+                
+                hideLoading();
+                return true;
             } catch (error) {
-                showNotification('Failed to save settings', 'error');
                 console.error('Error saving SEO settings:', error);
+                hideLoading();
+                showNotification(`Failed to save settings: ${error.message}`, 'error');
+                return false;
             }
-            hideLoading();
         }
 
         // Rendering functions
         function updateStatsDisplay() {
-            elements.totalFiles.textContent = state.stats.totalFiles;
-            elements.htmlFiles.textContent = state.stats.htmlFiles;
-            elements.phpFiles.textContent = state.stats.phpFiles;
-            elements.directories.textContent = state.stats.directories;
+            elements.totalFiles.textContent = state.stats.totalFiles || 0;
+            elements.htmlFiles.textContent = state.stats.htmlFiles || 0;
+            elements.phpFiles.textContent = state.stats.phpFiles || 0;
+            elements.directories.textContent = state.stats.directories || 0;
         }
 
         function renderRecentPages() {
-            if (state.loading) {
-                elements.recentPagesLoading.classList.remove('hidden');
-                elements.recentPagesEmpty.classList.add('hidden');
-                elements.recentPagesTable.classList.add('hidden');
-                return;
-            }
-
             if (state.pages.length === 0) {
                 elements.recentPagesLoading.classList.add('hidden');
                 elements.recentPagesEmpty.classList.remove('hidden');
@@ -957,23 +1142,27 @@
             recentPages.forEach(page => {
                 const row = document.createElement('tr');
                 row.className = 'hover:bg-gray-50';
+                
+                const filePath = page.filePath || page.url;
+                const safeFilePath = filePath.replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+                
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm font-medium text-gray-900">${escapeHtml(page.title)}</div>
+                        <div class="text-sm font-medium text-gray-900">${escapeHtml(page.title || 'Untitled')}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">${escapeHtml(page.url)}</div>
+                        <div class="text-sm text-gray-900">${escapeHtml(page.url || 'Unknown')}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center">
                             <div class="w-16 bg-gray-200 rounded-full h-2.5">
-                                <div class="h-2.5 rounded-full ${getScoreColorClass(page.seoScore)}" style="width: ${page.seoScore}%"></div>
+                                <div class="h-2.5 rounded-full ${getScoreColorClass(page.seoScore || 0)}" style="width: ${page.seoScore || 0}%"></div>
                             </div>
-                            <span class="ml-2 text-sm text-gray-600">${page.seoScore}</span>
+                            <span class="ml-2 text-sm text-gray-600">${page.seoScore || 0}</span>
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button class="edit-seo-btn text-blue-600 hover:text-blue-900" data-filepath="${escapeHtml(page.filePath)}">Edit SEO</button>
+                        <button class="edit-seo-btn text-blue-600 hover:text-blue-900" data-filepath="${safeFilePath}">Edit SEO</button>
                     </td>
                 `;
                 elements.recentPagesBody.appendChild(row);
@@ -981,21 +1170,15 @@
 
             // Add event listeners to edit buttons
             document.querySelectorAll('.edit-seo-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
+                btn.addEventListener('click', async (e) => {
                     const filePath = e.target.getAttribute('data-filepath');
-                    loadPageSEO(filePath);
+                    await loadPageSEO(filePath);
+                    setActiveTab('settings');
                 });
             });
         }
 
         function renderPagesTable() {
-            if (state.loading) {
-                elements.pagesLoading.classList.remove('hidden');
-                elements.pagesEmpty.classList.add('hidden');
-                elements.pagesTableContainer.classList.add('hidden');
-                return;
-            }
-
             if (state.pages.length === 0) {
                 elements.pagesLoading.classList.add('hidden');
                 elements.pagesEmpty.classList.remove('hidden');
@@ -1012,27 +1195,31 @@
             state.pages.forEach(page => {
                 const row = document.createElement('tr');
                 row.className = 'hover:bg-gray-50';
+                
+                const filePath = page.filePath || page.url;
+                const safeFilePath = filePath.replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+                
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm font-medium text-gray-900">${escapeHtml(page.title)}</div>
+                        <div class="text-sm font-medium text-gray-900">${escapeHtml(page.title || 'Untitled')}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">${escapeHtml(page.url)}</div>
+                        <div class="text-sm text-gray-900">${escapeHtml(page.url || 'Unknown')}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        ${escapeHtml(page.lastModified)}
+                        ${escapeHtml(page.lastModified || 'Unknown')}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center">
                             <div class="w-16 bg-gray-200 rounded-full h-2.5">
-                                <div class="h-2.5 rounded-full ${getScoreColorClass(page.seoScore)}" style="width: ${page.seoScore}%"></div>
+                                <div class="h-2.5 rounded-full ${getScoreColorClass(page.seoScore || 0)}" style="width: ${page.seoScore || 0}%"></div>
                             </div>
-                            <span class="ml-2 text-sm text-gray-600">${page.seoScore}</span>
+                            <span class="ml-2 text-sm text-gray-600">${page.seoScore || 0}</span>
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button class="edit-seo-btn text-blue-600 hover:text-blue-900 mr-3" data-filepath="${escapeHtml(page.filePath)}">Edit SEO</button>
-                        <button class="analyze-btn text-green-600 hover:text-green-900" data-filepath="${escapeHtml(page.filePath)}">Analyze</button>
+                        <button class="edit-seo-btn text-blue-600 hover:text-blue-900 mr-3" data-filepath="${safeFilePath}">Edit SEO</button>
+                        <button class="analyze-btn text-green-600 hover:text-green-900" data-filepath="${safeFilePath}">Analyze</button>
                     </td>
                 `;
                 elements.pagesTableBody.appendChild(row);
@@ -1040,46 +1227,48 @@
 
             // Add event listeners
             document.querySelectorAll('.edit-seo-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
+                btn.addEventListener('click', async (e) => {
                     const filePath = e.target.getAttribute('data-filepath');
-                    loadPageSEO(filePath);
+                    await loadPageSEO(filePath);
                     setActiveTab('settings');
                 });
             });
 
             document.querySelectorAll('.analyze-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
+                btn.addEventListener('click', async (e) => {
                     const filePath = e.target.getAttribute('data-filepath');
-                    loadPageSEO(filePath);
+                    await loadPageSEO(filePath);
                     setActiveTab('analysis');
                 });
             });
         }
 
         function updateSettingsForm() {
-            document.getElementById('title').value = state.seoData.title || '';
-            document.getElementById('description').value = state.seoData.description || '';
-            document.getElementById('keywords').value = state.seoData.keywords || '';
-            document.getElementById('canonicalUrl').value = state.seoData.canonicalUrl || '';
-            document.getElementById('robots').value = state.seoData.robots || 'index, follow';
-            document.getElementById('ogTitle').value = state.seoData.ogTitle || '';
-            document.getElementById('ogDescription').value = state.seoData.ogDescription || '';
-            document.getElementById('ogImage').value = state.seoData.ogImage || '';
-            document.getElementById('twitterCard').value = state.seoData.twitterCard || 'summary';
-            document.getElementById('twitterTitle').value = state.seoData.twitterTitle || '';
-            document.getElementById('twitterDescription').value = state.seoData.twitterDescription || '';
-            document.getElementById('twitterImage').value = state.seoData.twitterImage || '';
-            document.getElementById('schemaType').value = state.seoData.schemaType || 'Website';
-            document.getElementById('schemaData').value = state.seoData.schemaData || '{}';
+            const fields = ['title', 'description', 'keywords', 'canonicalUrl', 'ogTitle', 'ogDescription', 'ogImage', 'twitterTitle', 'twitterDescription', 'twitterImage', 'schemaData'];
+            const selects = ['robots', 'twitterCard', 'schemaType'];
+            
+            fields.forEach(field => {
+                const element = document.getElementById(field);
+                if (element) {
+                    element.value = state.seoData[field] || '';
+                }
+            });
+            
+            selects.forEach(field => {
+                const element = document.getElementById(field);
+                if (element) {
+                    element.value = state.seoData[field] || element.options[0]?.value || '';
+                }
+            });
         }
 
         function renderAnalysisResults() {
             // Update score displays
-            elements.scoreValue.textContent = state.analysis.score;
-            elements.analysisScoreValue.textContent = state.analysis.score;
-            elements.analysisScoreDisplay.textContent = `${state.analysis.score}/100`;
-            elements.analysisScoreText.textContent = `${state.analysis.score}/100`;
-            elements.analysisScoreBar.style.width = `${state.analysis.score}%`;
+            elements.scoreValue.textContent = state.analysis.score || 0;
+            elements.analysisScoreValue.textContent = state.analysis.score || 0;
+            elements.analysisScoreDisplay.textContent = `${state.analysis.score || 0}/100`;
+            elements.analysisScoreText.textContent = `${state.analysis.score || 0}/100`;
+            elements.analysisScoreBar.style.width = `${state.analysis.score || 0}%`;
             
             // Update score rating
             if (state.analysis.score >= 80) {
@@ -1094,11 +1283,11 @@
             }
             
             // Update score circles
-            updateScoreCircle(elements.scoreCircle, state.analysis.score);
-            updateScoreCircle(elements.analysisScoreCircle, state.analysis.score);
+            updateScoreCircle(elements.scoreCircle, state.analysis.score || 0);
+            updateScoreCircle(elements.analysisScoreCircle, state.analysis.score || 0);
             
             // Show/hide elements
-            if (state.analysis.issues.length === 0) {
+            if (!state.analysis.issues || state.analysis.issues.length === 0) {
                 elements.analysisEmpty.classList.remove('hidden');
                 elements.analysisResults.classList.add('hidden');
             } else {
@@ -1139,7 +1328,7 @@
                             </svg>
                             <div>
                                 <h4 class="font-medium text-gray-900">${issue.type.charAt(0).toUpperCase() + issue.type.slice(1)}</h4>
-                                <p class="text-gray-700 mt-1">${escapeHtml(issue.message)}</p>
+                                <p class="text-gray-700 mt-1">${escapeHtml(issue.message || 'No message')}</p>
                             </div>
                         </div>
                     `;
@@ -1148,9 +1337,9 @@
             }
             
             // Update stats
-            const errorCount = state.analysis.issues.filter(i => i.type === 'error').length;
-            const warningCount = state.analysis.issues.filter(i => i.type === 'warning').length;
-            const successCount = state.analysis.issues.filter(i => i.type === 'success').length;
+            const errorCount = state.analysis.issues?.filter(i => i.type === 'error').length || 0;
+            const warningCount = state.analysis.issues?.filter(i => i.type === 'warning').length || 0;
+            const successCount = state.analysis.issues?.filter(i => i.type === 'success').length || 0;
             
             elements.analysisStats.innerHTML = `
                 <div class="flex justify-between">
@@ -1168,17 +1357,17 @@
             if (state.currentFile) {
                 elements.currentFileDisplay.textContent = `Editing: ${state.currentFile}`;
                 elements.analysisFileDisplay.textContent = `Analyzing: ${state.currentFile}`;
-                elements.noFileSelected.classList.add('hidden');
-                elements.settingsForm.classList.remove('hidden');
                 elements.analysisNoFile.classList.add('hidden');
                 elements.analysisContent.classList.remove('hidden');
                 elements.viewFullAnalysis.classList.remove('hidden');
+                elements.runAnalysisBtn.disabled = false;
             } else {
-                elements.noFileSelected.classList.remove('hidden');
-                elements.settingsForm.classList.add('hidden');
+                elements.currentFileDisplay.textContent = 'Select a page below';
+                elements.analysisFileDisplay.textContent = 'No file selected';
                 elements.analysisNoFile.classList.remove('hidden');
                 elements.analysisContent.classList.add('hidden');
                 elements.viewFullAnalysis.classList.add('hidden');
+                elements.runAnalysisBtn.disabled = true;
             }
         }
 
@@ -1202,7 +1391,6 @@
                     break;
                 case 'settings':
                     elements.settingsTab.classList.remove('hidden');
-                    updateFileDisplays();
                     break;
                 case 'analysis':
                     elements.analysisTab.classList.remove('hidden');
@@ -1241,49 +1429,130 @@
 
         // Event Listeners
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('SEO Dashboard initialized');
+            
             // Initialize
             fetchPages();
-            fetchStats();
             
             // Tab navigation
             document.querySelectorAll('[data-tab]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const tab = e.target.getAttribute('data-tab');
+                    console.log('Switching to tab:', tab);
                     setActiveTab(tab);
                 });
             });
             
             // Button events
-            elements.refreshBtn.addEventListener('click', fetchPages);
-            elements.scanAgainBtn.addEventListener('click', fetchPages);
-            elements.scanPagesAgainBtn.addEventListener('click', fetchPages);
-            elements.refreshPagesBtn.addEventListener('click', fetchPages);
-            elements.analyzeBtn.addEventListener('click', () => runAnalysis());
-            elements.runAnalysisBtn.addEventListener('click', () => runAnalysis());
-            elements.saveSettingsBtn.addEventListener('click', saveSeoSettings);
-            elements.applyRecommendations.addEventListener('click', saveSeoSettings);
+            elements.refreshBtn.addEventListener('click', () => {
+                console.log('Refresh button clicked');
+                fetchPages();
+            });
             
-            // Navigation buttons
-            elements.goToPages.addEventListener('click', () => setActiveTab('pages'));
-            elements.goToSettings.addEventListener('click', () => setActiveTab('settings'));
-            elements.goToTools.addEventListener('click', () => setActiveTab('tools'));
-            elements.settingsGoToPages.addEventListener('click', () => setActiveTab('pages'));
-            elements.analysisGoToPages.addEventListener('click', () => setActiveTab('pages'));
+            elements.scanAgainBtn.addEventListener('click', () => {
+                console.log('Scan again button clicked');
+                fetchPages();
+            });
+            
+            elements.scanPagesAgainBtn.addEventListener('click', () => {
+                console.log('Scan pages again button clicked');
+                fetchPages();
+            });
+            
+            elements.refreshPagesBtn.addEventListener('click', () => {
+                console.log('Refresh pages button clicked');
+                fetchPages();
+            });
+            
+            elements.saveSettingsBtn.addEventListener('click', () => {
+                console.log('Save settings button clicked');
+                saveSeoSettings();
+            });
+            
+            elements.runAnalysisBtn.addEventListener('click', () => {
+                console.log('Run analysis button clicked');
+                runAnalysis();
+            });
+            
+            elements.applyRecommendations.addEventListener('click', () => {
+                console.log('Apply recommendations button clicked');
+                saveSeoSettings();
+            });
+            
+            elements.analysisGoToPages.addEventListener('click', () => {
+                console.log('Analysis go to pages button clicked');
+                setActiveTab('pages');
+            });
+            
+            // Page selector dropdown
+            elements.pageSelector.addEventListener('change', async (e) => {
+                const filePath = e.target.value;
+                console.log('Page selector changed to:', filePath);
+                await loadPageSEO(filePath);
+            });
+            
+            // Debug button
+            elements.pagesDebugBtn.addEventListener('click', async () => {
+                console.log('Pages debug button clicked');
+                const apiWorking = await testApiConnection();
+                if (apiWorking) {
+                    showNotification('API connection successful!', 'success');
+                } else {
+                    showNotification('API connection failed. Check if seo-api.php exists and is accessible.', 'error');
+                }
+            });
+            
+            elements.pagesCheckApi.addEventListener('click', async () => {
+                console.log('Pages check API button clicked');
+                const apiWorking = await testApiConnection();
+                if (apiWorking) {
+                    showNotification('API connection successful!', 'success');
+                } else {
+                    showNotification('API connection failed. Check if seo-api.php exists and is accessible.', 'error');
+                }
+            });
             
             // Tool buttons
-            elements.runSiteAudit.addEventListener('click', () => showNotification('Site audit feature coming soon!', 'info'));
-            elements.fixAllIssues.addEventListener('click', () => showNotification('Bulk fix feature coming soon!', 'info'));
-            elements.generateSitemap.addEventListener('click', () => showNotification('Sitemap generator coming soon!', 'info'));
-            elements.editRobotsTxt.addEventListener('click', () => showNotification('Robots.txt editor coming soon!', 'info'));
-            elements.checkBrokenLinks.addEventListener('click', () => showNotification('Broken links checker coming soon!', 'info'));
-            elements.checkPerformance.addEventListener('click', () => showNotification('Performance analyzer coming soon!', 'info'));
-            elements.importSeoData.addEventListener('click', () => showNotification('Import feature coming soon!', 'info'));
-            elements.exportSeoData.addEventListener('click', () => showNotification('Export feature coming soon!', 'info'));
-            elements.bulkEdit.addEventListener('click', () => showNotification('Bulk edit feature coming soon!', 'info'));
+            elements.runSiteAudit.addEventListener('click', () => {
+                showNotification('Site audit feature coming soon!', 'info');
+            });
+            
+            elements.fixAllIssues.addEventListener('click', () => {
+                showNotification('Bulk fix feature coming soon!', 'info');
+            });
+            
+            elements.generateSitemap.addEventListener('click', () => {
+                showNotification('Sitemap generator coming soon!', 'info');
+            });
+            
+            elements.editRobotsTxt.addEventListener('click', () => {
+                showNotification('Robots.txt editor coming soon!', 'info');
+            });
+            
+            elements.checkBrokenLinks.addEventListener('click', () => {
+                showNotification('Broken links checker coming soon!', 'info');
+            });
+            
+            elements.checkPerformance.addEventListener('click', () => {
+                showNotification('Performance analyzer coming soon!', 'info');
+            });
+            
+            elements.importSeoData.addEventListener('click', () => {
+                showNotification('Import feature coming soon!', 'info');
+            });
+            
+            elements.exportSeoData.addEventListener('click', () => {
+                showNotification('Export feature coming soon!', 'info');
+            });
+            
+            elements.bulkEdit.addEventListener('click', () => {
+                showNotification('Bulk edit feature coming soon!', 'info');
+            });
             
             // Search functionality
             elements.pagesSearch.addEventListener('input', function(e) {
                 const searchTerm = e.target.value.toLowerCase();
+                console.log('Search input changed:', searchTerm);
                 const rows = elements.pagesTableBody.querySelectorAll('tr');
                 
                 rows.forEach(row => {
@@ -1295,8 +1564,9 @@
                     }
                 });
             });
+            
+            console.log('Event listeners attached');
         });
     </script>
 </body>
-</html>
 </html>
