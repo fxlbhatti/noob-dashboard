@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="min-h-screen bg-gray-50">
+    <div id="app">
+        <!-- Loading state -->
+        <div id="loading" class="hidden fixed inset-0 bg-white bg-opacity-75 z-50 flex items-center justify-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+
+        <!-- Notification -->
+        <div id="notification" class="hidden fixed top-4 right-4 z-50 px-4 py-3 rounded-lg shadow-lg transition-opacity duration-300">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"></svg>
+                <span id="notification-message"></span>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                        </div>
+                        <h1 class="text-xl font-bold text-gray-900">SEO Dashboard</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button id="refresh-btn" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            <span>Refresh</span>
+                        </button>
+                        <button id="analyze-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2" disabled>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            <span>Run Analysis</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="bg-white border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex space-x-8" id="nav-tabs">
+                    <button data-tab="dashboard" class="py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 border-blue-500 text-blue-600">
+                        Dashboard
+                    </button>
+                    <button data-tab="pages" class="py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                        Pages
+                    </button>
+                    <button data-tab="settings" class="py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                        SEO Settings
+                    </button>
+                    <button data-tab="analysis" class="py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                        Analysis
+                    </button>
+                    <button data-tab="tools" class="py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                        Tools
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-green-100 rounded-lg">
+                                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">Total Files</p>
+                                <p class="text-2xl font-semibold text-gray-900" id="total-files">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-blue-100 rounded-lg">
+                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">HTML Files</p>
+                                <p class="text-2xl font-semibold text-gray-900" id="html-files">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-purple-100 rounded-lg">
+                                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">PHP Files</p>
+                                <p class="text-2xl font-semibold text-gray-900" id="php-files">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-yellow-100 rounded-lg">
+                                <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">Directories</p>
+                                <p class="text-2xl font-semibold text-gray-900" id="directories">0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Recent Pages</h2>
+                        <div id="recent-pages-loading" class="hidden text-center py-8">
+                            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+                        </div>
+                        <div id="recent-pages-empty" class="hidden text-center py-8 text-gray-500">
+                            <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <p>No HTML/PHP files found in your directory</p>
+                            <button id="scan-again-btn" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                                Scan Again
+                            </button>
+                        </div>
+                        <div id="recent-pages-table" class="hidden overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Page</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">URL</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SEO Score</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-pages-body" class="bg-white divide-y divide-gray-200">
+                                    <!-- Dynamic content will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Current SEO Score</h2>
+                        <div class="flex flex-col items-center">
+                            <div class="relative w-32 h-32 mb-6" id="score-circle">
+                                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="45" stroke="#e5e7eb" stroke-width="10" fill="none"></circle>
+                                    <circle cx="50" cy="50" r="45" stroke="#10b981" stroke-width="10" fill="none" stroke-dasharray="282.7433388230814" stroke-dashoffset="282.7433388230814" class="transition-all duration-1000 ease-out"></circle>
+                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="text-center">
+                                        <span class="text-2xl font-bold" id="score-value">0</span>
+                                        <div class="text-sm text-gray-500">SEO Score</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 w-full">
+                                <h3 class="font-medium text-gray-900 mb-3">Latest Analysis</h3>
+                                <div id="analysis-issues" class="space-y-2">
+                                    <!-- Issues will be inserted here -->
+                                </div>
+                                <button id="view-full-analysis" class="mt-4 w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 hidden">
+                                    View Full Analysis
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button id="go-to-pages" class="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors duration-200 text-center">
+                            <svg class="w-8 h-8 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <div class="font-medium text-gray-900">Manage Pages</div>
+                            <div class="text-sm text-gray-500">Edit SEO for all pages</div>
+                        </button>
+                        
+                        <button id="go-to-settings" class="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors duration-200 text-center">
+                            <svg class="w-8 h-8 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <div class="font-medium text-gray-900">SEO Settings</div>
+                            <div class="text-sm text-gray-500">Configure meta tags</div>
+                        </button>
+                        
+                        <button id="go-to-tools" class="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors duration-200 text-center">
+                            <svg class="w-8 h-8 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            </svg>
+                            <div class="font-medium text-gray-900">SEO Tools</div>
+                            <div class="text-sm text-gray-500">Audit & optimization</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pages Tab -->
+            <div id="pages-tab" class="hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-900">Manage Pages</h2>
+                    <div class="flex space-x-3">
+                        <button id="refresh-pages-btn" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            <span>Refresh List</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="pages-loading" class="hidden bg-white rounded-xl shadow-sm p-12 text-center">
+                    <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+                </div>
+                
+                <div id="pages-empty" class="hidden bg-white rounded-xl shadow-sm p-12 text-center">
+                    <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">No Pages Found</h3>
+                    <p class="text-gray-500 mb-4">No HTML or PHP files were found in your directory.</p>
+                    <button id="scan-pages-again-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                        Scan Again
+                    </button>
+                </div>
+                
+                <div id="pages-table-container" class="hidden bg-white rounded-xl shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 border-b">
+                        <div class="relative">
+                            <input type="text" id="pages-search" placeholder="Search pages..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Page</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">URL</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Modified</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SEO Score</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pages-table-body" class="bg-white divide-y divide-gray-200">
+                                <!-- Dynamic content will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings-tab" class="hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">SEO Settings</h2>
+                        <p id="current-file-display" class="text-gray-500 mt-1">No file selected</p>
+                    </div>
+                    <button id="save-settings-btn" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Save Settings</span>
+                    </button>
+                </div>
+                
+                <div id="no-file-selected" class="bg-white rounded-xl shadow-sm p-12 text-center">
+                    <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    </svg>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">No Page Selected</h3>
+                    <p class="text-gray-500 mb-4">Please select a page from the Pages tab to edit its SEO settings.</p>
+                    <button id="settings-go-to-pages" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                        Go to Pages
+                    </button>
+                </div>
+                
+                <div id="settings-form" class="hidden">
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Basic SEO</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Page Title</label>
+                                <input type="text" id="title" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter page title">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Meta Description</label>
+                                <textarea id="description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter meta description"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Keywords</label>
+                                <input type="text" id="keywords" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="keyword1, keyword2, keyword3">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Canonical URL</label>
+                                <input type="text" id="canonicalUrl" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="https://example.com/page">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Robots Meta</label>
+                                <select id="robots" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="index, follow">index, follow</option>
+                                    <option value="noindex, follow">noindex, follow</option>
+                                    <option value="index, nofollow">index, nofollow</option>
+                                    <option value="noindex, nofollow">noindex, nofollow</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Social Media</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <h4 class="text-md font-medium text-gray-900 mb-4">Open Graph (Facebook)</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">OG Title</label>
+                                        <input type="text" id="ogTitle" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Open Graph title">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">OG Description</label>
+                                        <textarea id="ogDescription" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Open Graph description"></textarea>
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">OG Image URL</label>
+                                        <input type="text" id="ogImage" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="https://example.com/image.jpg">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="text-md font-medium text-gray-900 mb-4">Twitter Card</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Card Type</label>
+                                        <select id="twitterCard" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                            <option value="summary">Summary</option>
+                                            <option value="summary_large_image">Summary Large Image</option>
+                                            <option value="app">App</option>
+                                            <option value="player">Player</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Twitter Title</label>
+                                        <input type="text" id="twitterTitle" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Twitter title">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Twitter Description</label>
+                                        <textarea id="twitterDescription" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Twitter description"></textarea>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Twitter Image URL</label>
+                                        <input type="text" id="twitterImage" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="https://example.com/twitter-image.jpg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Schema Markup</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Schema Type</label>
+                                <select id="schemaType" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="Website">Website</option>
+                                    <option value="Organization">Organization</option>
+                                    <option value="Person">Person</option>
+                                    <option value="Article">Article</option>
+                                    <option value="Product">Product</option>
+                                    <option value="LocalBusiness">Local Business</option>
+                                </select>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Schema Data (JSON-LD)</label>
+                                <textarea id="schemaData" rows="6" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm" placeholder='{"@context": "https://schema.org", "@type": "Website", "name": "Your Website Name"}'></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Tab -->
+            <div id="analysis-tab" class="hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">SEO Analysis</h2>
+                        <p id="analysis-file-display" class="text-gray-500 mt-1">No file selected</p>
+                    </div>
+                    <button id="run-analysis-btn" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                        <span>Run Analysis</span>
+                    </button>
+                </div>
+                
+                <div id="analysis-no-file" class="bg-white rounded-xl shadow-sm p-12 text-center">
+                    <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">No Page Selected</h3>
+                    <p class="text-gray-500 mb-4">Please select a page to analyze its SEO performance.</p>
+                    <button id="analysis-go-to-pages" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                        Go to Pages
+                    </button>
+                </div>
+                
+                <div id="analysis-content" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Analysis Results</h3>
+                        <div id="analysis-loading" class="hidden text-center py-8">
+                            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+                        </div>
+                        <div id="analysis-empty" class="hidden text-center py-8 text-gray-500">
+                            <p>No issues found. Run analysis to get results.</p>
+                        </div>
+                        <div id="analysis-results" class="space-y-4">
+                            <!-- Analysis results will be inserted here -->
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">SEO Score</h3>
+                        <div class="flex flex-col items-center">
+                            <div class="relative w-32 h-32 mb-6" id="analysis-score-circle">
+                                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="45" stroke="#e5e7eb" stroke-width="10" fill="none"></circle>
+                                    <circle cx="50" cy="50" r="45" stroke="#10b981" stroke-width="10" fill="none" stroke-dasharray="282.7433388230814" stroke-dashoffset="282.7433388230814" class="transition-all duration-1000 ease-out"></circle>
+                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="text-center">
+                                        <span class="text-2xl font-bold" id="analysis-score-value">0</span>
+                                        <div class="text-sm text-gray-500">SEO Score</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 w-full">
+                                <div class="text-center mb-4">
+                                    <div class="text-3xl font-bold text-gray-900" id="analysis-score-display">0/100</div>
+                                    <div class="text-sm text-gray-500" id="analysis-score-rating">Run analysis</div>
+                                </div>
+                                
+                                <div class="space-y-3">
+                                    <div>
+                                        <div class="flex justify-between text-sm mb-1">
+                                            <span class="text-gray-600">Overall Score</span>
+                                            <span class="font-medium" id="analysis-score-text">0/100</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-3">
+                                            <div id="analysis-score-bar" class="h-3 rounded-full bg-green-500" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="pt-4 border-t">
+                                        <h4 class="font-medium text-gray-900 mb-3">Quick Stats</h4>
+                                        <div class="space-y-2 text-sm" id="analysis-stats">
+                                            <!-- Stats will be inserted here -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <button id="apply-recommendations" class="mt-6 w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                    Apply Recommendations
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tools Tab -->
+            <div id="tools-tab" class="hidden space-y-6">
+                <h2 class="text-2xl font-bold text-gray-900">SEO Tools</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-200">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Site Audit</h3>
+                        <p class="text-gray-600 mb-4">Scan your entire website for SEO issues and get detailed recommendations.</p>
+                        <button id="run-site-audit" class="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                            Run Site Audit
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-200">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Fix All Issues</h3>
+                        <p class="text-gray-600 mb-4">Automatically fix common SEO issues across all your pages.</p>
+                        <button id="fix-all-issues" class="w-full py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">
+                            Fix All Issues
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-200">
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">XML Sitemap</h3>
+                        <p class="text-gray-600 mb-4">Generate and download an XML sitemap for your website.</p>
+                        <button id="generate-sitemap" class="w-full py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200">
+                            Generate Sitemap
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-200">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Robots.txt</h3>
+                        <p class="text-gray-600 mb-4">Create and edit your robots.txt file to control search engine crawling.</p>
+                        <button id="edit-robots-txt" class="w-full py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors duration-200">
+                            Edit Robots.txt
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-200">
+                        <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Broken Links</h3>
+                        <p class="text-gray-600 mb-4">Scan your website for broken links and fix them to improve user experience.</p>
+                        <button id="check-broken-links" class="w-full py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200">
+                            Check Links
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-200">
+                        <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Performance</h3>
+                        <p class="text-gray-600 mb-4">Analyze your website's loading speed and get optimization suggestions.</p>
+                        <button id="check-performance" class="w-full py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                            Check Performance
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Bulk Operations</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-4 border border-gray-200 rounded-lg">
+                            <h4 class="font-medium text-gray-900 mb-2">Import/Export SEO Data</h4>
+                            <p class="text-gray-600 mb-4">Import or export your SEO settings and metadata in CSV format.</p>
+                            <div class="flex space-x-3">
+                                <button id="import-seo-data" class="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors duration-200">
+                                    Import
+                                </button>
+                                <button id="export-seo-data" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-200">
+                                    Export
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 border border-gray-200 rounded-lg">
+                            <h4 class="font-medium text-gray-900 mb-2">Bulk Edit Meta Tags</h4>
+                            <p class="text-gray-600 mb-4">Apply SEO settings to multiple pages at once to save time.</p>
+                            <button id="bulk-edit" class="w-full px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors duration-200">
+                                Bulk Edit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // State management
+        const state = {
+            activeTab: 'dashboard',
+            seoData: {
+                title: '',
+                description: '',
+                keywords: '',
+                canonicalUrl: '',
+                robots: 'index, follow',
+                ogTitle: '',
+                ogDescription: '',
+                ogImage: '',
+                twitterCard: 'summary',
+                twitterTitle: '',
+                twitterDescription: '',
+                twitterImage: '',
+                schemaType: 'Website',
+                schemaData: '{}'
+            },
+            pages: [],
+            analysis: {
+                score: 0,
+                issues: []
+            },
+            currentFile: '',
+            loading: false,
+            stats: {
+                totalFiles: 0,
+                htmlFiles: 0,
+                phpFiles: 0,
+                directories: 0
+            }
+        };
+
+        // DOM Elements
+        const elements = {
+            loading: document.getElementById('loading'),
+            notification: document.getElementById('notification'),
+            notificationMessage: document.getElementById('notification-message'),
+            navTabs: document.getElementById('nav-tabs'),
+            dashboardTab: document.getElementById('dashboard-tab'),
+            pagesTab: document.getElementById('pages-tab'),
+            settingsTab: document.getElementById('settings-tab'),
+            analysisTab: document.getElementById('analysis-tab'),
+            toolsTab: document.getElementById('tools-tab'),
+            refreshBtn: document.getElementById('refresh-btn'),
+            analyzeBtn: document.getElementById('analyze-btn'),
+            saveSettingsBtn: document.getElementById('save-settings-btn'),
+            runAnalysisBtn: document.getElementById('run-analysis-btn'),
+            currentFileDisplay: document.getElementById('current-file-display'),
+            analysisFileDisplay: document.getElementById('analysis-file-display'),
+            // Stats elements
+            totalFiles: document.getElementById('total-files'),
+            htmlFiles: document.getElementById('html-files'),
+            phpFiles: document.getElementById('php-files'),
+            directories: document.getElementById('directories'),
+            // Recent pages elements
+            recentPagesLoading: document.getElementById('recent-pages-loading'),
+            recentPagesEmpty: document.getElementById('recent-pages-empty'),
+            recentPagesTable: document.getElementById('recent-pages-table'),
+            recentPagesBody: document.getElementById('recent-pages-body'),
+            // Pages tab elements
+            pagesLoading: document.getElementById('pages-loading'),
+            pagesEmpty: document.getElementById('pages-empty'),
+            pagesTableContainer: document.getElementById('pages-table-container'),
+            pagesTableBody: document.getElementById('pages-table-body'),
+            pagesSearch: document.getElementById('pages-search'),
+            // Settings elements
+            noFileSelected: document.getElementById('no-file-selected'),
+            settingsForm: document.getElementById('settings-form'),
+            // Analysis elements
+            analysisNoFile: document.getElementById('analysis-no-file'),
+            analysisContent: document.getElementById('analysis-content'),
+            analysisLoading: document.getElementById('analysis-loading'),
+            analysisEmpty: document.getElementById('analysis-empty'),
+            analysisResults: document.getElementById('analysis-results'),
+            analysisScoreCircle: document.getElementById('analysis-score-circle'),
+            analysisScoreValue: document.getElementById('analysis-score-value'),
+            analysisScoreDisplay: document.getElementById('analysis-score-display'),
+            analysisScoreRating: document.getElementById('analysis-score-rating'),
+            analysisScoreText: document.getElementById('analysis-score-text'),
+            analysisScoreBar: document.getElementById('analysis-score-bar'),
+            analysisStats: document.getElementById('analysis-stats'),
+            // Score circle elements
+            scoreCircle: document.getElementById('score-circle'),
+            scoreValue: document.getElementById('score-value'),
+            // Buttons
+            viewFullAnalysis: document.getElementById('view-full-analysis'),
+            goToPages: document.getElementById('go-to-pages'),
+            goToSettings: document.getElementById('go-to-settings'),
+            goToTools: document.getElementById('go-to-tools'),
+            settingsGoToPages: document.getElementById('settings-go-to-pages'),
+            analysisGoToPages: document.getElementById('analysis-go-to-pages'),
+            scanAgainBtn: document.getElementById('scan-again-btn'),
+            scanPagesAgainBtn: document.getElementById('scan-pages-again-btn'),
+            refreshPagesBtn: document.getElementById('refresh-pages-btn'),
+            applyRecommendations: document.getElementById('apply-recommendations'),
+            // Tool buttons
+            runSiteAudit: document.getElementById('run-site-audit'),
+            fixAllIssues: document.getElementById('fix-all-issues'),
+            generateSitemap: document.getElementById('generate-sitemap'),
+            editRobotsTxt: document.getElementById('edit-robots-txt'),
+            checkBrokenLinks: document.getElementById('check-broken-links'),
+            checkPerformance: document.getElementById('check-performance'),
+            importSeoData: document.getElementById('import-seo-data'),
+            exportSeoData: document.getElementById('export-seo-data'),
+            bulkEdit: document.getElementById('bulk-edit')
+        };
+
+        // Utility functions
+        function showLoading() {
+            state.loading = true;
+            elements.loading.classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            state.loading = false;
+            elements.loading.classList.add('hidden');
+        }
+
+        function showNotification(message, type = 'success') {
+            elements.notification.className = `fixed top-4 right-4 z-50 px-4 py-3 rounded-lg shadow-lg transition-opacity duration-300 ${
+                type === 'error' ? 'bg-red-100 text-red-800' : 
+                type === 'warning' ? 'bg-yellow-100 text-yellow-800' :
+                'bg-green-100 text-green-800'
+            }`;
+            
+            // Set icon
+            const icon = elements.notification.querySelector('svg');
+            icon.innerHTML = '';
+            if (type === 'error') {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />';
+            } else if (type === 'warning') {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />';
+            } else {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />';
+            }
+            
+            elements.notificationMessage.textContent = message;
+            elements.notification.classList.remove('hidden');
+            
+            setTimeout(() => {
+                elements.notification.classList.add('hidden');
+            }, 3000);
+        }
+
+        function updateScoreCircle(element, score) {
+            const circle = element.querySelector('circle:last-child');
+            const circumference = 2 * Math.PI * 45;
+            const offset = circumference * (1 - score / 100);
+            
+            // Update color based on score
+            if (score >= 80) {
+                circle.setAttribute('stroke', '#10b981');
+            } else if (score >= 60) {
+                circle.setAttribute('stroke', '#f59e0b');
+            } else {
+                circle.setAttribute('stroke', '#ef4444');
+            }
+            
+            circle.setAttribute('stroke-dashoffset', offset);
+        }
+
+        // API functions
+        const API_URL = './seo-api.php';
+
+        async function fetchPages() {
+            showLoading();
+            try {
+                const response = await fetch(`${API_URL}?action=list`);
+                const data = await response.json();
+                if (data.pages) {
+                    state.pages = data.pages;
+                    renderPagesTable();
+                    renderRecentPages();
+                    
+                    if (data.pages.length > 0 && !state.currentFile) {
+                        loadPageSEO(data.pages[0].filePath);
+                    }
+                }
+            } catch (error) {
+                showNotification('Failed to load pages', 'error');
+                console.error('Error fetching pages:', error);
+            }
+            hideLoading();
+        }
+
+        async function fetchStats() {
+            try {
+                const response = await fetch(`${API_URL}?action=scan`);
+                const data = await response.json();
+                state.stats = data;
+                updateStatsDisplay();
+            } catch (error) {
+                console.error('Error fetching stats:', error);
+            }
+        }
+
+        async function loadPageSEO(filePath) {
+            showLoading();
+            try {
+                const response = await fetch(`${API_URL}?action=get&path=${encodeURIComponent(filePath)}`);
+                const data = await response.json();
+                if (data.seoData) {
+                    state.seoData = data.seoData;
+                    state.currentFile = filePath;
+                    updateSettingsForm();
+                    updateFileDisplays();
+                    
+                    // Enable buttons
+                    elements.saveSettingsBtn.disabled = false;
+                    elements.analyzeBtn.disabled = false;
+                    elements.runAnalysisBtn.disabled = false;
+                    elements.applyRecommendations.disabled = false;
+                    
+                    // Run analysis
+                    runAnalysis(filePath);
+                } else if (data.error) {
+                    showNotification(data.error, 'error');
+                }
+            } catch (error) {
+                showNotification('Failed to load page SEO data', 'error');
+                console.error('Error loading page SEO:', error);
+            }
+            hideLoading();
+        }
+
+        async function runAnalysis(filePath = state.currentFile) {
+            if (!filePath) return;
+            
+            elements.analysisLoading.classList.remove('hidden');
+            elements.analysisResults.innerHTML = '';
+            
+            try {
+                const response = await fetch(`${API_URL}?action=analyze&path=${encodeURIComponent(filePath)}`);
+                const data = await response.json();
+                if (data.score !== undefined) {
+                    state.analysis = {
+                        score: data.score,
+                        issues: data.issues || []
+                    };
+                    renderAnalysisResults();
+                } else if (data.error) {
+                    showNotification(data.error, 'error');
+                }
+            } catch (error) {
+                showNotification('Failed to run analysis', 'error');
+                console.error('Error running analysis:', error);
+            }
+            
+            elements.analysisLoading.classList.add('hidden');
+        }
+
+        async function saveSeoSettings() {
+            if (!state.currentFile) {
+                showNotification('No file selected', 'error');
+                return;
+            }
+
+            showLoading();
+            try {
+                // Get current form values
+                const formData = {
+                    title: document.getElementById('title').value,
+                    description: document.getElementById('description').value,
+                    keywords: document.getElementById('keywords').value,
+                    canonicalUrl: document.getElementById('canonicalUrl').value,
+                    robots: document.getElementById('robots').value,
+                    ogTitle: document.getElementById('ogTitle').value,
+                    ogDescription: document.getElementById('ogDescription').value,
+                    ogImage: document.getElementById('ogImage').value,
+                    twitterCard: document.getElementById('twitterCard').value,
+                    twitterTitle: document.getElementById('twitterTitle').value,
+                    twitterDescription: document.getElementById('twitterDescription').value,
+                    twitterImage: document.getElementById('twitterImage').value,
+                    schemaType: document.getElementById('schemaType').value,
+                    schemaData: document.getElementById('schemaData').value,
+                    filePath: state.currentFile
+                };
+
+                const response = await fetch(`${API_URL}?action=save`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    showNotification(data.message);
+                    // Refresh pages list
+                    fetchPages();
+                } else {
+                    showNotification(data.error || 'Failed to save settings', 'error');
+                }
+            } catch (error) {
+                showNotification('Failed to save settings', 'error');
+                console.error('Error saving SEO settings:', error);
+            }
+            hideLoading();
+        }
+
+        // Rendering functions
+        function updateStatsDisplay() {
+            elements.totalFiles.textContent = state.stats.totalFiles;
+            elements.htmlFiles.textContent = state.stats.htmlFiles;
+            elements.phpFiles.textContent = state.stats.phpFiles;
+            elements.directories.textContent = state.stats.directories;
+        }
+
+        function renderRecentPages() {
+            if (state.loading) {
+                elements.recentPagesLoading.classList.remove('hidden');
+                elements.recentPagesEmpty.classList.add('hidden');
+                elements.recentPagesTable.classList.add('hidden');
+                return;
+            }
+
+            if (state.pages.length === 0) {
+                elements.recentPagesLoading.classList.add('hidden');
+                elements.recentPagesEmpty.classList.remove('hidden');
+                elements.recentPagesTable.classList.add('hidden');
+                return;
+            }
+
+            elements.recentPagesLoading.classList.add('hidden');
+            elements.recentPagesEmpty.classList.add('hidden');
+            elements.recentPagesTable.classList.remove('hidden');
+
+            // Show only first 5 pages
+            const recentPages = state.pages.slice(0, 5);
+            elements.recentPagesBody.innerHTML = '';
+
+            recentPages.forEach(page => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${escapeHtml(page.title)}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${escapeHtml(page.url)}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="w-16 bg-gray-200 rounded-full h-2.5">
+                                <div class="h-2.5 rounded-full ${getScoreColorClass(page.seoScore)}" style="width: ${page.seoScore}%"></div>
+                            </div>
+                            <span class="ml-2 text-sm text-gray-600">${page.seoScore}</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button class="edit-seo-btn text-blue-600 hover:text-blue-900" data-filepath="${escapeHtml(page.filePath)}">Edit SEO</button>
+                    </td>
+                `;
+                elements.recentPagesBody.appendChild(row);
+            });
+
+            // Add event listeners to edit buttons
+            document.querySelectorAll('.edit-seo-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const filePath = e.target.getAttribute('data-filepath');
+                    loadPageSEO(filePath);
+                });
+            });
+        }
+
+        function renderPagesTable() {
+            if (state.loading) {
+                elements.pagesLoading.classList.remove('hidden');
+                elements.pagesEmpty.classList.add('hidden');
+                elements.pagesTableContainer.classList.add('hidden');
+                return;
+            }
+
+            if (state.pages.length === 0) {
+                elements.pagesLoading.classList.add('hidden');
+                elements.pagesEmpty.classList.remove('hidden');
+                elements.pagesTableContainer.classList.add('hidden');
+                return;
+            }
+
+            elements.pagesLoading.classList.add('hidden');
+            elements.pagesEmpty.classList.add('hidden');
+            elements.pagesTableContainer.classList.remove('hidden');
+
+            elements.pagesTableBody.innerHTML = '';
+
+            state.pages.forEach(page => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${escapeHtml(page.title)}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${escapeHtml(page.url)}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${escapeHtml(page.lastModified)}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="w-16 bg-gray-200 rounded-full h-2.5">
+                                <div class="h-2.5 rounded-full ${getScoreColorClass(page.seoScore)}" style="width: ${page.seoScore}%"></div>
+                            </div>
+                            <span class="ml-2 text-sm text-gray-600">${page.seoScore}</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button class="edit-seo-btn text-blue-600 hover:text-blue-900 mr-3" data-filepath="${escapeHtml(page.filePath)}">Edit SEO</button>
+                        <button class="analyze-btn text-green-600 hover:text-green-900" data-filepath="${escapeHtml(page.filePath)}">Analyze</button>
+                    </td>
+                `;
+                elements.pagesTableBody.appendChild(row);
+            });
+
+            // Add event listeners
+            document.querySelectorAll('.edit-seo-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const filePath = e.target.getAttribute('data-filepath');
+                    loadPageSEO(filePath);
+                    setActiveTab('settings');
+                });
+            });
+
+            document.querySelectorAll('.analyze-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const filePath = e.target.getAttribute('data-filepath');
+                    loadPageSEO(filePath);
+                    setActiveTab('analysis');
+                });
+            });
+        }
+
+        function updateSettingsForm() {
+            document.getElementById('title').value = state.seoData.title || '';
+            document.getElementById('description').value = state.seoData.description || '';
+            document.getElementById('keywords').value = state.seoData.keywords || '';
+            document.getElementById('canonicalUrl').value = state.seoData.canonicalUrl || '';
+            document.getElementById('robots').value = state.seoData.robots || 'index, follow';
+            document.getElementById('ogTitle').value = state.seoData.ogTitle || '';
+            document.getElementById('ogDescription').value = state.seoData.ogDescription || '';
+            document.getElementById('ogImage').value = state.seoData.ogImage || '';
+            document.getElementById('twitterCard').value = state.seoData.twitterCard || 'summary';
+            document.getElementById('twitterTitle').value = state.seoData.twitterTitle || '';
+            document.getElementById('twitterDescription').value = state.seoData.twitterDescription || '';
+            document.getElementById('twitterImage').value = state.seoData.twitterImage || '';
+            document.getElementById('schemaType').value = state.seoData.schemaType || 'Website';
+            document.getElementById('schemaData').value = state.seoData.schemaData || '{}';
+        }
+
+        function renderAnalysisResults() {
+            // Update score displays
+            elements.scoreValue.textContent = state.analysis.score;
+            elements.analysisScoreValue.textContent = state.analysis.score;
+            elements.analysisScoreDisplay.textContent = `${state.analysis.score}/100`;
+            elements.analysisScoreText.textContent = `${state.analysis.score}/100`;
+            elements.analysisScoreBar.style.width = `${state.analysis.score}%`;
+            
+            // Update score rating
+            if (state.analysis.score >= 80) {
+                elements.analysisScoreRating.textContent = 'Excellent';
+                elements.analysisScoreBar.className = 'h-3 rounded-full bg-green-500';
+            } else if (state.analysis.score >= 60) {
+                elements.analysisScoreRating.textContent = 'Good';
+                elements.analysisScoreBar.className = 'h-3 rounded-full bg-yellow-500';
+            } else {
+                elements.analysisScoreRating.textContent = 'Needs Improvement';
+                elements.analysisScoreBar.className = 'h-3 rounded-full bg-red-500';
+            }
+            
+            // Update score circles
+            updateScoreCircle(elements.scoreCircle, state.analysis.score);
+            updateScoreCircle(elements.analysisScoreCircle, state.analysis.score);
+            
+            // Show/hide elements
+            if (state.analysis.issues.length === 0) {
+                elements.analysisEmpty.classList.remove('hidden');
+                elements.analysisResults.classList.add('hidden');
+            } else {
+                elements.analysisEmpty.classList.add('hidden');
+                elements.analysisResults.classList.remove('hidden');
+                
+                // Render issues
+                elements.analysisResults.innerHTML = '';
+                state.analysis.issues.forEach(issue => {
+                    const issueDiv = document.createElement('div');
+                    issueDiv.className = `p-4 rounded-lg border-l-4 ${
+                        issue.type === 'error' ? 'border-red-500 bg-red-50' :
+                        issue.type === 'warning' ? 'border-yellow-500 bg-yellow-50' :
+                        issue.type === 'success' ? 'border-green-500 bg-green-50' :
+                        'border-blue-500 bg-blue-50'
+                    }`;
+                    
+                    let iconHtml = '';
+                    let textColor = '';
+                    if (issue.type === 'error') {
+                        iconHtml = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />';
+                        textColor = 'text-red-600';
+                    } else if (issue.type === 'warning') {
+                        iconHtml = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />';
+                        textColor = 'text-yellow-600';
+                    } else if (issue.type === 'success') {
+                        iconHtml = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />';
+                        textColor = 'text-green-600';
+                    } else {
+                        iconHtml = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />';
+                        textColor = 'text-blue-600';
+                    }
+                    
+                    issueDiv.innerHTML = `
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 mt-0.5 mr-3 ${textColor}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                ${iconHtml}
+                            </svg>
+                            <div>
+                                <h4 class="font-medium text-gray-900">${issue.type.charAt(0).toUpperCase() + issue.type.slice(1)}</h4>
+                                <p class="text-gray-700 mt-1">${escapeHtml(issue.message)}</p>
+                            </div>
+                        </div>
+                    `;
+                    elements.analysisResults.appendChild(issueDiv);
+                });
+            }
+            
+            // Update stats
+            const errorCount = state.analysis.issues.filter(i => i.type === 'error').length;
+            const warningCount = state.analysis.issues.filter(i => i.type === 'warning').length;
+            const successCount = state.analysis.issues.filter(i => i.type === 'success').length;
+            
+            elements.analysisStats.innerHTML = `
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Issues Found:</span>
+                    <span class="font-medium">${errorCount} critical, ${warningCount} warnings</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Successes:</span>
+                    <span class="font-medium">${successCount}</span>
+                </div>
+            `;
+        }
+
+        function updateFileDisplays() {
+            if (state.currentFile) {
+                elements.currentFileDisplay.textContent = `Editing: ${state.currentFile}`;
+                elements.analysisFileDisplay.textContent = `Analyzing: ${state.currentFile}`;
+                elements.noFileSelected.classList.add('hidden');
+                elements.settingsForm.classList.remove('hidden');
+                elements.analysisNoFile.classList.add('hidden');
+                elements.analysisContent.classList.remove('hidden');
+                elements.viewFullAnalysis.classList.remove('hidden');
+            } else {
+                elements.noFileSelected.classList.remove('hidden');
+                elements.settingsForm.classList.add('hidden');
+                elements.analysisNoFile.classList.remove('hidden');
+                elements.analysisContent.classList.add('hidden');
+                elements.viewFullAnalysis.classList.add('hidden');
+            }
+        }
+
+        function setActiveTab(tab) {
+            state.activeTab = tab;
+            
+            // Hide all tabs
+            elements.dashboardTab.classList.add('hidden');
+            elements.pagesTab.classList.add('hidden');
+            elements.settingsTab.classList.add('hidden');
+            elements.analysisTab.classList.add('hidden');
+            elements.toolsTab.classList.add('hidden');
+            
+            // Show active tab
+            switch (tab) {
+                case 'dashboard':
+                    elements.dashboardTab.classList.remove('hidden');
+                    break;
+                case 'pages':
+                    elements.pagesTab.classList.remove('hidden');
+                    break;
+                case 'settings':
+                    elements.settingsTab.classList.remove('hidden');
+                    updateFileDisplays();
+                    break;
+                case 'analysis':
+                    elements.analysisTab.classList.remove('hidden');
+                    updateFileDisplays();
+                    break;
+                case 'tools':
+                    elements.toolsTab.classList.remove('hidden');
+                    break;
+            }
+            
+            // Update nav tabs
+            document.querySelectorAll('[data-tab]').forEach(btn => {
+                if (btn.getAttribute('data-tab') === tab) {
+                    btn.className = 'py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 border-blue-500 text-blue-600';
+                } else {
+                    btn.className = 'py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300';
+                }
+            });
+        }
+
+        function getScoreColorClass(score) {
+            if (score >= 80) return 'bg-green-500';
+            if (score >= 60) return 'bg-yellow-500';
+            return 'bg-red-500';
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '<')
+                .replace(/>/g, '>')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize
+            fetchPages();
+            fetchStats();
+            
+            // Tab navigation
+            document.querySelectorAll('[data-tab]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const tab = e.target.getAttribute('data-tab');
+                    setActiveTab(tab);
+                });
+            });
+            
+            // Button events
+            elements.refreshBtn.addEventListener('click', fetchPages);
+            elements.scanAgainBtn.addEventListener('click', fetchPages);
+            elements.scanPagesAgainBtn.addEventListener('click', fetchPages);
+            elements.refreshPagesBtn.addEventListener('click', fetchPages);
+            elements.analyzeBtn.addEventListener('click', () => runAnalysis());
+            elements.runAnalysisBtn.addEventListener('click', () => runAnalysis());
+            elements.saveSettingsBtn.addEventListener('click', saveSeoSettings);
+            elements.applyRecommendations.addEventListener('click', saveSeoSettings);
+            
+            // Navigation buttons
+            elements.goToPages.addEventListener('click', () => setActiveTab('pages'));
+            elements.goToSettings.addEventListener('click', () => setActiveTab('settings'));
+            elements.goToTools.addEventListener('click', () => setActiveTab('tools'));
+            elements.settingsGoToPages.addEventListener('click', () => setActiveTab('pages'));
+            elements.analysisGoToPages.addEventListener('click', () => setActiveTab('pages'));
+            
+            // Tool buttons
+            elements.runSiteAudit.addEventListener('click', () => showNotification('Site audit feature coming soon!', 'info'));
+            elements.fixAllIssues.addEventListener('click', () => showNotification('Bulk fix feature coming soon!', 'info'));
+            elements.generateSitemap.addEventListener('click', () => showNotification('Sitemap generator coming soon!', 'info'));
+            elements.editRobotsTxt.addEventListener('click', () => showNotification('Robots.txt editor coming soon!', 'info'));
+            elements.checkBrokenLinks.addEventListener('click', () => showNotification('Broken links checker coming soon!', 'info'));
+            elements.checkPerformance.addEventListener('click', () => showNotification('Performance analyzer coming soon!', 'info'));
+            elements.importSeoData.addEventListener('click', () => showNotification('Import feature coming soon!', 'info'));
+            elements.exportSeoData.addEventListener('click', () => showNotification('Export feature coming soon!', 'info'));
+            elements.bulkEdit.addEventListener('click', () => showNotification('Bulk edit feature coming soon!', 'info'));
+            
+            // Search functionality
+            elements.pagesSearch.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const rows = elements.pagesTableBody.querySelectorAll('tr');
+                
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+</html>
